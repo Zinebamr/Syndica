@@ -1,11 +1,16 @@
 package com.FSTM.syndica.Model;
 
+import java.net.UnknownServiceException;
+
 public class Syndic {
     public String syndicId;
     public String userName;
     public String passWord;
 
-    public Syndic(String syndicId, String retrievedUserName, String passWord) {
+    public Syndic(String syndicId, String userName, String passWord) {
+        this.syndicId = syndicId;
+        this.userName = userName;
+        this.passWord = passWord;
     }
 
     public String getSyndicId() {

@@ -23,7 +23,7 @@ import javafx.stage.StageStyle;
 
 public class LoginController implements Initializable {
     private Syndic syndic;
-    private SyndicSal syndicSal;
+    private SyndicSal syndicSal = new SyndicSal();
 
     private double x = 0;
     private double y = 0;
@@ -41,8 +41,6 @@ public class LoginController implements Initializable {
 
     public void loginAdmin(){
         try{
-
-
             Alert alert;
 
             if(username.getText().isEmpty() || password.getText().isEmpty()){
