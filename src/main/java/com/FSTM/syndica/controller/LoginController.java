@@ -3,7 +3,7 @@ package com.FSTM.syndica.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.FSTM.syndica.DAL.SyndicSal;
+import com.FSTM.syndica.DAL.SyndicDal;
 import com.FSTM.syndica.Model.Syndic;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +23,7 @@ import javafx.stage.StageStyle;
 
 public class LoginController implements Initializable {
     private Syndic syndic;
-    private SyndicSal syndicSal = new SyndicSal();
+    private SyndicDal syndicDal = new SyndicDal();
 
     private double x = 0;
     private double y = 0;
@@ -50,8 +50,8 @@ public class LoginController implements Initializable {
                 alert.setContentText("Please fill all blank fields");
                 alert.showAndWait();
             }else{
-                syndic = syndicSal.getSyndicByUserName(username.getText()) ;
-                if(syndic.syndicId != null){
+                syndic = syndicDal.getSyndicByUserName(username.getText());
+                if(syndic.passWord.equals(password.getText())  && syndic.userName.equals(username.getText())){
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Information Message");
                     alert.setHeaderText(null);
@@ -59,16 +59,20 @@ public class LoginController implements Initializable {
                     alert.showAndWait();
 
                     loginBtn.getScene().getWindow().hide();
-                    Parent root = FXMLLoader.load(getClass().getResource("dashboard-view.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("dashboard-view.fxml"));
+                    Parent dashboardRoot = loader.load();
+                    DashboardController
+                            dashboardController = loader.getController();
+                    dashboardController.InitUser(syndic);
                     Stage stage = new Stage();
-                    Scene scene = new Scene(root);
+                    Scene scene = new Scene(dashboardRoot);
 
-                    root.setOnMousePressed((MouseEvent event) ->{
+                    dashboardRoot.setOnMousePressed((MouseEvent event) ->{
                         x = event.getSceneX();
                         y = event.getSceneY();
                     });
 
-                    root.setOnMouseDragged((MouseEvent event) ->{
+                    dashboardRoot.setOnMouseDragged((MouseEvent event) ->{
                         stage.setX(event.getScreenX() - x);
                         stage.setY(event.getScreenY() - y);
                     });

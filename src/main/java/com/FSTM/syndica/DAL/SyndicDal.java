@@ -7,10 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SyndicSal {
+public class SyndicDal {
     private database db;
 
-    public SyndicSal() {
+    public SyndicDal() {
         this.db = new database();
     }
 
@@ -18,9 +18,9 @@ public class SyndicSal {
         Connection connection = null;
         try {
             connection = database.getConnection();
-            String insertSql = "INSERT INTO syndic (syndicId, userName, passWord) VALUES (?, ?, ?)";
+            String insertSql = "INSERT INTO Syndic (syndicId, userName, passWord) VALUES (?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(insertSql);
-            preparedStatement.setString(1, syndic.getSyndicId());
+            preparedStatement.setInt(1, syndic.getSyndicId());
             preparedStatement.setString(2, syndic.getUserName());
             preparedStatement.setString(3, syndic.getPassWord());
             preparedStatement.executeUpdate();
@@ -41,11 +41,11 @@ public class SyndicSal {
         Connection connection = null;
         try {
             connection = database.getConnection();
-            String updateSql = "UPDATE syndic SET userName = ?, passWord = ? WHERE syndicId = ?";
+            String updateSql = "UPDATE Syndic SET userName = ?, passWord = ? WHERE id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(updateSql);
             preparedStatement.setString(1, syndic.getUserName());
             preparedStatement.setString(2, syndic.getPassWord());
-            preparedStatement.setString(3, syndic.getSyndicId());
+            preparedStatement.setInt(3, syndic.getSyndicId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -86,17 +86,20 @@ public class SyndicSal {
         Syndic syndic = null;
         try {
             connection = database.getConnection();
-            String selectSql = "SELECT syndicId, userName, passWord FROM syndic WHERE userName = ?";
+            String selectSql = "SELECT * FROM Syndic WHERE userName = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(selectSql);
             preparedStatement.setString(1, userName);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                String syndicId = resultSet.getString("syndicId");
-                String retrievedUserName = resultSet.getString("userName");
+                int id = resultSet.getInt("id");
+                String nom = resultSet.getString("nom");
+                String prenom = resultSet.getString("prenom");
+                String adresse = resultSet.getString("adresse");
+                String username = resultSet.getString("userName");
                 String passWord = resultSet.getString("passWord");
 
-                syndic = new Syndic(syndicId, retrievedUserName, passWord);
+                syndic = new Syndic(id, nom, prenom, adresse, username, passWord);
             }
 
             resultSet.close();
