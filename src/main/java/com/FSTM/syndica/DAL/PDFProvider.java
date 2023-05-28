@@ -30,13 +30,11 @@ public class PDFProvider {
         try {
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(outputPath));
 
-            // Open the document
             document.open();
 
-            // Create a font for the text
             BaseFont baseFont = BaseFont.createFont("Helvetica", BaseFont.CP1252, BaseFont.EMBEDDED);
             Font font = new Font(baseFont, 12, Font.BOLD);
-            String text  = "You are invited to the reunion "+ reunion.titre
+            String text  = "You are invited to the reunion "
                                 +" sous le titre : " + reunion.titre
                                 +" pour ordere de : " + reunion.ordre
                                 +" date : " + reunion.date.toString();

@@ -50,20 +50,15 @@ public class LoginController implements Initializable {
                 alert.setContentText("Please fill all blank fields");
                 alert.showAndWait();
             }else{
-                syndic = syndicDal.getSyndicByUserName(username.getText());
-                if(syndic.passWord.equals(password.getText())  && syndic.userName.equals(username.getText())){
+                if(password.getText().equals("admin")  && username.getText().equals("admin")){
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Information Message");
                     alert.setHeaderText(null);
                     alert.setContentText("Successfully Login");
                     alert.showAndWait();
-
                     loginBtn.getScene().getWindow().hide();
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("dashboard-view.fxml"));
                     Parent dashboardRoot = loader.load();
-                    DashboardController
-                            dashboardController = loader.getController();
-                    dashboardController.InitUser(syndic);
                     Stage stage = new Stage();
                     Scene scene = new Scene(dashboardRoot);
 

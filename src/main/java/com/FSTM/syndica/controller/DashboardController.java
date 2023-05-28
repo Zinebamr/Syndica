@@ -3,6 +3,7 @@ package com.FSTM.syndica.controller;
 import com.FSTM.syndica.DAL.CorproprieteDal;
 import com.FSTM.syndica.DAL.PDFProvider;
 import com.FSTM.syndica.DAL.ReunionDal;
+import com.FSTM.syndica.DAL.SyndicDal;
 import com.FSTM.syndica.Model.Corpropriete;
 import com.FSTM.syndica.Model.Reunion;
 import com.FSTM.syndica.Model.Syndic;
@@ -18,8 +19,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -30,6 +29,7 @@ public class DashboardController implements Initializable {
     public Reunion currentReunion;
     public ReunionDal reunionDal = new ReunionDal();
     public List<Reunion> reunionList;
+    SyndicDal syndicDal = new SyndicDal();
     Random random = new Random();
     List<Corpropriete> corproprietes ;
     CorproprieteDal corproprieteDal = new CorproprieteDal();
@@ -47,7 +47,7 @@ public class DashboardController implements Initializable {
     @FXML
     private Button imprimer_invitation;
     @FXML
-    private TableView<Reunion> addEmployee_tableView;
+    private TableView<Reunion> reunion_tableView;
     @FXML
     private TableColumn<?, ?> ReunionDateColumn;
 
@@ -165,12 +165,13 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Initialized table meeting");
-        addEmployee_tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        reunion_tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 // Call a method or perform any action with the selected item
                 handleRowSelection(newSelection);
             }
         });
+        InitUser();
     }
 
     private void handleRowSelection(Reunion newSelection) {
@@ -181,21 +182,21 @@ public class DashboardController implements Initializable {
         ReunionTitle.setText(newSelection.titre);
     }
 
-    public void InitUser(Syndic syndic) {
-        this.currentUser = syndic;
-        username.setText(syndic.getPrenom() +" "+ syndic.getNom());
-        initListMeuble(syndic);
-        initTable(syndic);
+    public void InitUser() {
+        this.currentUser = syndicDal.getSyndic();
+        username.setText(currentUser.getPrenom() +" "+ currentUser.getNom());
+        initListMeuble(currentUser);
+        initTable(currentUser);
 
     }
     private void refreshTable(){
         reunionList = reunionDal.selectReunionsBySyndicId(currentUser.id);
-        addEmployee_tableView.setItems(FXCollections.observableArrayList(reunionList));
-        addEmployee_tableView.refresh();
+        reunion_tableView.setItems(FXCollections.observableArrayList(reunionList));
+        reunion_tableView.refresh();
     }
     private void initTable(Syndic syndic) {
-        reunionList = reunionDal.selectReunionsBySyndicId(syndic.id);
-        addEmployee_tableView.setItems(FXCollections.observableArrayList(reunionList));
+        reunionList = reunionDal.selectReunionsBySyndicId(1);
+        reunion_tableView.setItems(FXCollections.observableArrayList(reunionList));
 
         ReunionIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         ReunionDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -205,7 +206,7 @@ public class DashboardController implements Initializable {
     }
 
     private void initListMeuble(Syndic syndic) {
-        corproprietes = corproprieteDal.getCorproprietesBySyndicId(syndic.id);
+        corproprietes = corproprieteDal.getCorproprietesBySyndicId(1);
         List<Integer> idList = corproprietes.stream()
                 .map(t->{
                     return t.getId();

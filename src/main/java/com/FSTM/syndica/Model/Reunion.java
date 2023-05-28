@@ -17,6 +17,10 @@ public class Reunion {
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public LocalDate getDate() {
         return date;
     }
